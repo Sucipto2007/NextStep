@@ -1,92 +1,26 @@
-NEXTSTEP
+NextStep hadir dengan 4 fitur utama yang terintegrasi dalam satu platform:
 
-Berikut rangkuman semua ide utama yang sudah kita susun bersama:
+1. StudyMate – Kalender Belajar & Countdown 🗓️
+Fitur ini membantu Anda merencanakan dan melacak agenda akademis. Anda bisa:
+- Menambahkan jadwal ujian, deadline tugas, dan kegiatan sekolah
+- Melihat countdown otomatis untuk setiap jadwal
+- Mendapatkan notifikasi visual melalui perubahan warna kartu jadwal
+- Menyimpan data jadwal aman di LocalStorage browser
 
-1. StudyMate (Kalender Belajar + Countdown Ujian)
+⚠️ Penting: Geser kalender untuk memuat data jadwal pada bulan tersebut.
 
-Fitur ini membantu siswa mengatur jadwal penting seperti:
+2. FocusU – Pomodoro Timer 🍅
+Tingkatkan fokus dan produktivitas dengan teknik Pomodoro:
+- Sesi fokus 25 menit
+- Sesi istirahat 5 menit
+- Alarm notifikasi di akhir sesi
+- Pelacak produktivitas otomatis
 
-jadwal ujian
+3. SmartNote – Catatan Cerdas 📝
+Tempat mencatat hal penting dengan fitur:
+- Buat dan hapus catatan
+- Simpan otomatis ke LocalStorage
+- Desain minimalis untuk fokus menulis
 
-deadline tugas
-
-kegiatan sekolah
-
-Fitur utama:
-
-Kalender interaktif
-
-Input tanggal acara penting
-
-Countdown otomatis
-
-Penanda warna (semakin dekat → semakin merah)
-
-📝 Catatan penting (permintaan kamu):
-
-👉 Untuk mengaktifkan StudyMate, pengguna harus menggeser kalender terlebih dahulu.
-Setelah kalender digeser (swipe / scroll bulan), countdown & event akan muncul dan aktif.
-
-Ini bisa berupa:
-
-geser kiri/kanan untuk pindah bulan
-
-atau scroll pada tampilan kalender
-
-2. FocusU (Pomodoro Timer)
-
-Fitur ini membantu siswa tetap fokus saat belajar.
-
-Fitur:
-
-Timer 25 menit belajar
-
-Istirahat 5 menit
-
-Hitung total waktu fokus
-
-Alarm otomatis
-
-3. SmartNote (Catatan Pintar)
-
-Kamu tadi minta menambahkan fitur ini — jadi aku gabungkan dalam rangkuman.
-
-Fungsi SmartNote:
-
-Tempat menyimpan catatan singkat
-
-Bisa menambahkan list tugas / ringkasan kecil
-
-Data disimpan dengan LocalStorage
-
-Bisa ditandai sebagai “Selesai”
-
-Tampilan simpel dan mudah dipakai
-
-4. CareerPath (Tes Rekomendasi Jurusan)
-
-Fitur untuk membantu siswa menentukan arah setelah lulus SMA/SMK.
-
-Fitur:
-
-Kuis minat bakat (10 pertanyaan)
-
-Penilaian otomatis
-
-Hasil: rekomendasi jurusan (TI, kesehatan, bisnis, seni, dll)
-
-Penjelasan singkat tiap jurusan
-
-5. Teknologi yang digunakan
-
-Semua fitur dapat dibuat dengan:
-
-HTML untuk struktur
-
-CSS untuk tampilan
-
-JavaScript untuk logika
-
-LocalStorage untuk menyimpan data pengguna (tanpa PHP)
-
-Tidak perlu backend atau database server → aman sesuai aturan lomba.
+4. CareerPath – Rekomendasi Jurusan Kuliah 🧭
+Bingung jurusan kuliah? Jawab kuis minat singkat dan dapatkan rekomendasi bidang studi seperti IT, Kesehatan, Bisnis, atau Seni.
