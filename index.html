@@ -264,7 +264,6 @@
                 <div class="card-glass rounded-xl shadow p-6 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="font-semibold text-slate-800">Kalender</h4>
-                        <p>(klik gesek kalender untuk mengaktifkan kalender yang sesuai bulan dan tanggal)</p>
                         <div class="space-x-2">
                             <button id="prev-month" class="px-3 py-1 rounded-lg hover:bg-slate-200"><i class="fas fa-chevron-left"></i></button>
                             <span id="current-month-name" class="font-semibold text-slate-700 min-w-32 text-center"></span>
@@ -1287,7 +1286,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Deadline Distribution Chart
         const deadlineCtx = document.getElementById('deadlineChart').getContext('2d');
-        const priorityCounts = { high: 0, medium:  0, low: 0 };
+        const priorityCounts = { high: 0, medium:   0, low: 0 };
         deadlines.forEach(d => priorityCounts[d.priority || 'medium']++);
         
         if (window.deadlineChart) window.deadlineChart.destroy();
@@ -1452,9 +1451,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ===== Initial Load =====
+    renderCalendar();
+    renderDeadlines();
+    resetTimer(true);
+    renderNotes();
+    updateDashboard();
+    updateSessionsDisplay();
 });
 </script>
 
 </body>
 </html>
-
