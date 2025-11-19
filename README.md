@@ -7,7 +7,6 @@ Fitur ini membantu Anda merencanakan dan melacak agenda akademis. Anda bisa:
 - Mendapatkan notifikasi visual melalui perubahan warna kartu jadwal
 - Menyimpan data jadwal aman di LocalStorage browser
 
-⚠️ Penting: Geser kalender untuk memuat data jadwal pada bulan tersebut.
 
 2. FocusU – Pomodoro Timer 🍅
 Tingkatkan fokus dan produktivitas dengan teknik Pomodoro:
