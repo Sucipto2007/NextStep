@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextStep - Plan. Focus. Achieve.</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS v3 via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Custom Tailwind Config & CSS -->
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+                color: #334155;
+            }
+        }
+        
+        .page-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .page-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .focus-mode-gradient {
+            background: conic-gradient(theme(colors.sky.500) 360deg, theme(colors.slate.200) 0deg);
+        }
+        .break-mode-gradient {
+             background: conic-gradient(theme(colors.emerald.500) 360deg, theme(colors.slate.200) 0deg);
+        }
+        .quiz-option.selected {
+            border-color: theme(colors.sky.500);
+            background-color: theme(colors.sky.50);
+            box-shadow: 0 0 0 2px theme(colors.sky.200);
+        }
+        
+        .card-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.05));
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .input-field {
+            @apply w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-200 transition-all;
+        }
+
+        .btn-primary {
+            @apply bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:scale-105;
+        }
+
+        .calendar-cell {
+            @apply p-2 rounded-lg text-center text-sm font-medium cursor-pointer hover:bg-sky-100 transition-colors;
+        }
+
+        .deadline-badge {
+            @apply inline-block px-3 py-1 rounded-full text-xs font-bold;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+    <!-- ===== Sidebar Navigation ===== -->
+    <aside id="sidebar" class="w-64 bg-white shadow-xl fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 overflow-y-auto">
+        <div class="sticky top-0 bg-gradient-to-r from-sky-600 to-blue-600 p-6 text-white text-center">
+            <a href="#" class="text-2xl font-bold">Next<span class="font-light">Step</span></a>
+            <p class="text-xs text-sky-100 mt-1">Plan. Focus. Achieve.</p>
+        </div>
+        <nav class="p-4 space-y-2">
+            <a href="#" data-page="dashboard" class="nav-link active flex items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition-all duration-200">
+                <i class="fas fa-home-alt w-6 text-center"></i><span class="ml-3">Dashboard</span>
+            </a>
+            <a href="#" data-page="analytics" class="nav-link flex items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition-all duration-200">
+                <i class="fas fa-chart-line w-6 text-center"></i><span class="ml-3">Analytics</span>
+            </a>
+            <a href="#" data-page="studymate" class="nav-link flex items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition-all duration-200">
+                <i class="fas fa-calendar-alt w-6 text-center"></i><span class="ml-3">StudyMate</span>
+            </a>
+            <a href="#" data-page="focusu" class="nav-link flex items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition-all duration-200">
+                <i class="fas fa-clock w-6 text-center"></i><span class="ml-3">FocusU</span>
+            </a>
+            <a href="#" data-page="careerpath" class="nav-link flex items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition-all duration-200">
+                <i class="fas fa-lightbulb w-6 text-center"></i><span class="ml-3">CareerPath Quiz</span>
+            </a>
+            <a href="#" data-page="smartnotes" class="nav-link flex items-center px-4 py-3 rounded-xl text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition-all duration-200">
+                <i class="fas fa-sticky-note w-6 text-center"></i><span class="ml-3">SmartNotes</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- ===== Main Content Area ===== -->
+    <div class="flex-1 lg:ml-64 transition-all duration-300">
+        <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-20 shadow-sm p-4 lg:py-6 lg:px-8 flex items-center justify-between">
+            <h1 id="page-title" class="text-xl md:text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Dashboard</h1>
+            <button id="menu-toggle" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </header>
+
+        <main class="p-4 md:p-8">
+            <!-- ===== Page Content: Dashboard ===== -->
+            <div id="page-dashboard" class="page-content active">
+                <div class="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl shadow-lg p-8 text-white mb-8">
+                    <h2 class="text-3xl font-bold">Selamat Datang di NextStep!</h2>
+                    <p class="text-sky-100 mt-2">Mari kita mulai merencanakan, fokus, dan meraih tujuanmu hari ini.</p>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-slate-500 text-sm">Total Deadline</p>
+                                <p id="stat-total-deadline" class="text-3xl font-bold text-sky-600 mt-2">0</p>
+                            </div>
+                            <i class="fas fa-fire text-2xl text-red-500 opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-slate-500 text-sm">Mendatang 7 Hari</p>
+                                <p id="stat-upcoming" class="text-3xl font-bold text-amber-600 mt-2">0</p>
+                            </div>
+                            <i class="fas fa-hourglass-end text-2xl text-amber-500 opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-slate-500 text-sm">Catatan Dibuat</p>
+                                <p id="stat-notes" class="text-3xl font-bold text-emerald-600 mt-2">0</p>
+                            </div>
+                            <i class="fas fa-sticky-note text-2xl text-emerald-500 opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-slate-500 text-sm">Study Streak</p>
+                                <p id="stat-streak" class="text-3xl font-bold text-violet-600 mt-2">0 hari</p>
+                            </div>
+                            <i class="fas fa-star text-2xl text-violet-500 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How it Works Section -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">Bagaimana NextStep Membantumu?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        <div class="card-glass p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                            <i class="fas fa-calendar-check text-3xl text-sky-500"></i>
+                            <h4 class="font-semibold mt-3 text-slate-800">Atur Jadwalmu</h4>
+                            <p class="text-sm text-slate-600 mt-2">Catat deadline dan dapatkan countdown agar tidak ada yang terlewat.</p>
+                        </div>
+                        <div class="card-glass p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                            <i class="fas fa-brain text-3xl text-amber-500"></i>
+                            <h4 class="font-semibold mt-3 text-slate-800">Jaga Fokusmu</h4>
+                            <p class="text-sm text-slate-600 mt-2">Gunakan timer Pomodoro untuk sesi belajar yang lebih efektif.</p>
+                        </div>
+                        <div class="card-glass p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                            <i class="fas fa-graduation-cap text-3xl text-emerald-500"></i>
+                            <h4 class="font-semibold mt-3 text-slate-800">Temukan Minatmu</h4>
+                            <p class="text-sm text-slate-600 mt-2">Jawab kuis singkat untuk rekomendasi jurusan kuliah.</p>
+                        </div>
+                        <div class="card-glass p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                            <i class="fas fa-lightbulb text-3xl text-violet-500"></i>
+                            <h4 class="font-semibold mt-3 text-slate-800">Simpan Idemu</h4>
+                            <p class="text-sm text-slate-600 mt-2">Tulis ide-ide brilianmu dalam catatan modern yang aman.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card-glass rounded-xl shadow p-6">
+                        <h5 class="font-semibold text-slate-800"><i class="fas fa-fire me-2 text-red-500"></i>Deadline Mendatang</h5>
+                        <div id="dashboard-deadlines" class="mt-4 space-y-3">
+                            <p class="text-slate-500">Tidak ada deadline dalam waktu dekat.</p>
+                        </div>
+                    </div>
+                    <div class="card-glass rounded-xl shadow p-6">
+                        <h5 class="font-semibold text-slate-800"><i class="fas fa-thumbtack me-2 text-yellow-500"></i>Catatan Terbaru</h5>
+                        <div id="dashboard-notes" class="mt-4 space-y-3">
+                            <p class="text-slate-500">Kamu belum punya catatan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Page Content: Analytics ===== -->
+            <div id="page-analytics" class="page-content">
+                <!-- Time Range Filter -->
+                <div class="flex gap-2 mb-6 flex-wrap">
+                    <button class="time-range-btn active px-4 py-2 rounded-lg font-medium transition-all" data-range="day">Per Hari</button>
+                    <button class="time-range-btn px-4 py-2 rounded-lg font-medium transition-all" data-range="week">Per Minggu</button>
+                    <button class="time-range-btn px-4 py-2 rounded-lg font-medium transition-all" data-range="month">Per Bulan</button>
+                    <button class="time-range-btn px-4 py-2 rounded-lg font-medium transition-all" data-range="hour">Per Jam</button>
+                </div>
+
+                <!-- Monitoring Results Chart -->
+                <div class="card-glass rounded-xl shadow p-6 mb-8">
+                    <h4 class="font-semibold text-slate-800 mb-4">📊 Grafik Pemantauan Hasil Pembelajaran</h4>
+                    <canvas id="monitoringChart" class="max-h-96"></canvas>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="card-glass rounded-xl shadow p-6">
+                        <h4 class="font-semibold text-slate-800 mb-4">Distribusi Deadline</h4>
+                        <canvas id="deadlineChart" class="max-h-64"></canvas>
+                    </div>
+                    <div class="card-glass rounded-xl shadow p-6">
+                        <h4 class="font-semibold text-slate-800 mb-4">Deadline Mendatang</h4>
+                        <canvas id="productivityChart" class="max-h-64"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <p class="text-slate-500 text-sm">Rata-rata Deadline</p>
+                        <p id="avg-deadline" class="text-2xl font-bold text-sky-600 mt-2">0</p>
+                    </div>
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <p class="text-slate-500 text-sm">Total Focus Time (jam)</p>
+                        <p id="total-focus-time" class="text-2xl font-bold text-emerald-600 mt-2">0</p>
+                    </div>
+                    <div class="stat-card rounded-xl shadow p-6">
+                        <p class="text-slate-500 text-sm">Tingkat Penyelesaian</p>
+                        <p id="completion-rate" class="text-2xl font-bold text-violet-600 mt-2">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Page Content: StudyMate ===== -->
+            <div id="page-studymate" class="page-content">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <h3 class="text-xl font-bold text-slate-800">Jadwal & Deadline</h3>
+                    <button class="btn-primary" onclick="showModal('deadlineModal')"><i class="fas fa-plus mr-2"></i>Tambah Deadline</button>
+                </div>
+
+                <!-- Calendar View -->
+                <div class="card-glass rounded-xl shadow p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-semibold text-slate-800">Kalender</h4>
+                        <div class="space-x-2">
+                            <button id="prev-month" class="px-3 py-1 rounded-lg hover:bg-slate-200"><i class="fas fa-chevron-left"></i></button>
+                            <span id="current-month-name" class="font-semibold text-slate-700 min-w-32 text-center"></span>
+                            <button id="next-month" class="px-3 py-1 rounded-lg hover:bg-slate-200"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+                        <!-- Calendar will be generated here -->
+                    </div>
+                    <div class="mt-4 flex gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-sky-500"></div>
+                            <span class="text-slate-700">Ada Deadline</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-emerald-500"></div>
+                            <span class="text-slate-700">Hari Ini</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deadline List -->
+                <h4 class="font-semibold text-slate-800 mb-4">Daftar Deadline</h4>
+                <div id="deadline-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Deadline cards will be inserted here -->
+                </div>
+            </div>
+
+            <!-- ===== Page Content: FocusU ===== -->
+            <div id="page-focusu" class="page-content">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Timer Customization Settings -->
+                    <div class="card-glass rounded-2xl shadow-lg p-6 mb-8">
+                        <h4 class="font-semibold text-slate-800 mb-4"><i class="fas fa-cog mr-2 text-sky-500"></i>Atur Timer</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Fokus (menit)</label>
+                                <div class="flex items-center gap-2 justify-center">
+                                    <button onclick="decreaseFocusDuration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg transition-colors"><i class="fas fa-minus"></i></button>
+                                    <input type="number" id="focus-duration" min="1" max="120" value="25" class="input-field w-20 text-center">
+                                    <button onclick="increaseFocusDuration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg transition-colors"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Istirahat (menit)</label>
+                                <div class="flex items-center gap-2 justify-center">
+                                    <button onclick="decreaseBreakDuration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg transition-colors"><i class="fas fa-minus"></i></button>
+                                    <input type="number" id="break-duration" min="1" max="60" value="5" class="input-field w-20 text-center">
+                                    <button onclick="increaseBreakDuration()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-lg transition-colors"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Notifikasi Suara</label>
+                                <input type="file" id="focusu-sound" accept="audio/*" class="input-field text-xs">
+                                <audio id="focusu-audio" src="" preload="auto" style="display:none"></audio>
+                            </div>
+                        </div>
+                        <div class="flex justify-center mt-6">
+                            <button onclick="applyTimerSettings()" class="btn-primary"><i class="fas fa-check mr-2"></i>Terapkan Pengaturan</button>
+                        </div>
+                    </div>
+
+                    <!-- Main Timer Display - Simetris & Minimalist -->
+                    <div class="flex justify-center">
+                        <div class="card-glass rounded-3xl shadow-2xl p-12 w-full max-w-md text-center">
+                            <h3 id="focusu-status" class="text-2xl font-bold text-slate-700 mb-6">Focus Time</h3>
+                            
+                            <!-- Timer Circle with Progress - Centered -->
+                            <div class="flex justify-center mb-8">
+                                <div id="focusu-timer-display" class="w-64 h-64 rounded-full flex items-center justify-center relative focus-mode-gradient shadow-2xl">
+                                    <!-- Progress SVG Circle -->
+                                    <svg id="focusu-progress-svg" width="250" height="250" class="absolute inset-0 drop-shadow-lg">
+                                        <defs>
+                                            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+                                            </filter>
+                                        </defs>
+                                        <circle cx="125" cy="125" r="115" stroke="#cbd5e1" stroke-width="8" fill="none" filter="url(#shadow)"/>
+                                        <circle id="focusu-progress-circle" cx="125" cy="125" r="115" stroke="#0ea5e9" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="722" stroke-dashoffset="722" style="transform: rotate(-90deg); transform-origin: 125px 125px;"/>
+                                    </svg>
+                                    <div class="relative z-10 text-center">
+                                        <span id="focusu-time" class="block text-6xl font-bold text-slate-900 font-mono leading-none">25:00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Control Buttons - Simetris -->
+                            <div class="flex justify-center gap-4 mb-8">
+                                <button id="focusu-start-btn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-full transition-all hover:shadow-lg active:scale-95"><i class="fas fa-play mr-2"></i>Mulai</button>
+                                <button id="focusu-pause-btn" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-full transition-all hover:shadow-lg active:scale-95"><i class="fas fa-pause mr-2"></i>Jeda</button>
+                                <button id="focusu-reset-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3 rounded-full transition-all hover:shadow-lg active:scale-95"><i class="fas fa-redo mr-2"></i>Reset</button>
+                            </div>
+
+                            <!-- Session Counter -->
+                            <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl p-4 border border-emerald-200">
+                                <p id="focusu-sessions" class="text-slate-700 text-lg"><i class="fas fa-fire text-red-500 mr-2"></i>Sesi Hari Ini: <span class="font-bold text-3xl text-emerald-600">0</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Page Content: CareerPath Quiz ===== -->
+            <div id="page-careerpath" class="page-content">
+                <div class="max-w-4xl mx-auto">
+                    <div id="quiz-container" class="w-full">
+                        <div class="card-glass rounded-2xl shadow-lg text-center p-8">
+                            <i class="fas fa-graduation-cap text-5xl text-emerald-500"></i>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-4">Temukan Jurusan Impianmu</h3>
+                            <p class="text-slate-600 mt-2 max-w-md mx-auto">Jawab 10 pertanyaan singkat untuk mendapatkan rekomendasi jurusan yang paling cocok dengan minatmu.</p>
+                            <button id="start-quiz-btn" class="btn-primary mt-6"><i class="fas fa-play mr-2"></i>Mulai Kuis</button>
+                        </div>
+                    </div>
+                    <div id="quiz-result" class="hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="card-glass rounded-xl shadow p-6">
+                                <h5 class="font-semibold text-slate-500">Rekomendasi Untukmu:</h5>
+                                <h2 id="quiz-recommendation" class="text-3xl font-bold text-sky-600 my-3"></h2>
+                                <p id="quiz-reason" class="text-slate-600 text-sm"></p>
+                                <div class="mt-6 p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-lg border border-sky-200">
+                                    <p class="text-sm text-slate-700"><span class="font-semibold">💡 Saran:</span> Pelajari lebih lanjut tentang bidang ini melalui kursus online dan magang.</p>
+                                </div>
+                            </div>
+                            <div class="card-glass rounded-xl shadow p-6">
+                                <h5 class="font-semibold text-slate-800 mb-4">Peta Minatmu:</h5>
+                                <div style="position: relative; height: 350px; width: 100%;">
+                                    <canvas id="interestChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <button id="restart-quiz-btn" class="btn-primary"><i class="fas fa-redo mr-2"></i>Ulangi Kuis</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Page Content: SmartNotes ===== -->
+            <div id="page-smartnotes" class="page-content">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <h3 class="text-xl font-bold text-slate-800">Catatan Pintar</h3>
+                    <button class="btn-primary" onclick="showModal('noteModal')"><i class="fas fa-plus mr-2"></i>Tambah Catatan</button>
+                </div>
+                <!-- SmartNotes Filter/Search -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <h3 class="text-xl font-bold text-slate-800">Catatan Pintar</h3>
+                    <div class="flex gap-2 flex-wrap items-center">
+                        <select id="note-filter-tag" class="input-field w-32">
+                            <option value="">Semua Tag</option>
+                            <option value="Penting">Penting</option>
+                            <option value="Sekolah">Sekolah</option>
+                            <option value="Ide Kerja">Ide Kerja</option>
+                        </select>
+                        <input type="text" id="note-search" class="input-field w-40" placeholder="Cari catatan...">
+                        <button class="btn-primary" onclick="showModal('noteModal')"><i class="fas fa-plus mr-2"></i>Tambah Catatan</button>
+                    </div>
+                </div>
+                <div id="notes-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Note cards will be inserted here -->
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div id="modal-overlay" class="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm" onclick="closeAllModals()"></div>
+
+<!-- Deadline Modal -->
+<div id="deadlineModal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 z-50 hidden">
+    <h5 class="text-lg font-bold text-slate-800 mb-4">Tambah Deadline Baru</h5>
+    <form id="deadline-form">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Nama Tugas</label>
+            <input type="text" id="task-name" class="input-field" placeholder="Contoh: Tugas Matematika" required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Mata Kuliah / Subjek</label>
+            <input type="text" id="task-subject" class="input-field" placeholder="Contoh: Matematika" required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Prioritas</label>
+            <select id="task-priority" class="input-field">
+                <option value="low">Rendah</option>
+                <option value="medium" selected>Sedang</option>
+                <option value="high">Tinggi</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Deadline</label>
+            <input type="date" id="task-date" class="input-field" required>
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
+            <button type="button" class="px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium" onclick="closeAllModals()">Batal</button>
+            <button type="submit" class="btn-primary">Simpan</button>
+        </div>
+    </form>
+</div>
+
+<!-- Note Modal -->
+<div id="noteModal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 z-50 hidden">
+    <h5 id="note-modal-title" class="text-lg font-bold text-slate-800 mb-4">Tambah Catatan Baru</h5>
+    <form id="note-form">
+        <input type="hidden" id="note-id">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Judul</label>
+            <input type="text" id="note-title" class="input-field" placeholder="Judul catatan..." required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Isi Catatan</label>
+            <textarea id="note-content" rows="5" class="input-field resize-none" placeholder="Tulis catatan mu..." required></textarea>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Tag/Kategori</label>
+            <div class="flex gap-2 flex-wrap">
+                <label><input type="checkbox" class="note-tag" value="Penting"> <span class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs">Penting</span></label>
+                <label><input type="checkbox" class="note-tag" value="Sekolah"> <span class="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs">Sekolah</span></label>
+                <label><input type="checkbox" class="note-tag" value="Ide Kerja"> <span class="px-2 py-1 rounded bg-emerald-100 text-emerald-700 text-xs">Ide Kerja</span></label>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Warna Catatan</label>
+            <div class="flex gap-2">
+                <label><input type="radio" name="note-color" value="yellow" checked> <span class="inline-block w-6 h-6 rounded-full bg-yellow-300 border"></span></label>
+                <label><input type="radio" name="note-color" value="blue"> <span class="inline-block w-6 h-6 rounded-full bg-blue-300 border"></span></label>
+                <label><input type="radio" name="note-color" value="green"> <span class="inline-block w-6 h-6 rounded-full bg-emerald-300 border"></span></label>
+                <label><input type="radio" name="note-color" value="red"> <span class="inline-block w-6 h-6 rounded-full bg-red-300 border"></span></label>
+            </div>
+        </div>
+        <div class="flex justify-between gap-3 mt-6">
+            <button type="button" class="px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-100 font-medium" onclick="closeAllModals()">Batal</button>
+            <button type="button" id="note-pin-btn" class="px-4 py-2 rounded-lg text-slate-700 hover:bg-yellow-100 font-medium"><span id="note-pin-icon">📌</span> Pin</button>
+            <button type="submit" class="btn-primary">Simpan Catatan</button>
+        </div>
+    </form>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ===== General App Logic =====
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pageContents = document.querySelectorAll('.page-content');
+    const pageTitle = document.getElementById('page-title');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menu-toggle');
+    const modalOverlay = document.getElementById('modal-overlay');
+
+    window.navigateToPage = (pageId) => {
+        navLinks.forEach(link => {
+            link.classList.remove('bg-sky-50', 'text-sky-600', 'font-semibold');
+            if (link.dataset.page === pageId) {
+                link.classList.add('bg-sky-50', 'text-sky-600', 'font-semibold');
+                pageTitle.textContent = link.querySelector('span').textContent.trim();
+            }
+        });
+        pageContents.forEach(page => {
+            page.classList.remove('active');
+            if (page.id === `page-${pageId}`) {
+                page.classList.add('active');
+            }
+        });
+        sidebar.classList.add('-translate-x-full');
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = e.currentTarget.dataset.page;
+            navigateToPage(pageId);
+        });
+    });
+
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+    });
+
+    // Modal Logic
+    window.showModal = (modalId) => {
+        document.getElementById(modalId).classList.remove('hidden');
+        modalOverlay.classList.remove('hidden');
+    }
+    
+    window.closeAllModals = () => {
+        document.querySelectorAll('.fixed.z-50').forEach(modal => modal.classList.add('hidden'));
+        modalOverlay.classList.add('hidden');
+    }
+
+    // ===== StudyMate Logic with Calendar =====
+    const deadlineForm = document.getElementById('deadline-form');
+    const deadlineList = document.getElementById('deadline-list');
+    const calendarGrid = document.getElementById('calendar-grid');
+    const currentMonthName = document.getElementById('current-month-name');
+    let deadlines = JSON.parse(localStorage.getItem('deadlines')) || [];
+    let focusSessions = JSON.parse(localStorage.getItem('focusSessions')) || 0;
+    let currentMonth = new Date();
+
+    function renderCalendar() {
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+
+        currentMonthName.textContent = new Date(year, month).toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+
+        calendarGrid.innerHTML = '';
+        const weekDays = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+        weekDays.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'font-semibold text-slate-600 text-center py-2';
+            dayHeader.textContent = day;
+            calendarGrid.appendChild(dayHeader);
+        });
+
+        for (let i = 0; i < startingDayOfWeek; i++) {
+            calendarGrid.appendChild(document.createElement('div'));
+        }
+
+        // Get today's date
+        const today = new Date();
+        const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const cell = document.createElement('div');
+            const cellDate = new Date(year, month, day);
+            const isToday = isCurrentMonth && day === today.getDate();
+            
+            const hasDeadline = deadlines.some(d => {
+                const dDate = new Date(d.date);
+                return dDate.getDate() === day && dDate.getMonth() === month && dDate.getFullYear() === year;
+            });
+            
+            let className = 'calendar-cell text-slate-700 ';
+            if (isToday) {
+                className += 'bg-emerald-500 text-white font-bold ring-2 ring-emerald-300';
+            } else if (hasDeadline) {
+                className += 'bg-sky-200 text-sky-900 font-bold';
+            }
+            
+            cell.className = className;
+            cell.innerHTML = `${day}${hasDeadline ? '<span class="text-xs block">•</span>' : ''}${isToday ? '<span class="text-xs block">📅</span>' : ''}`;
+            calendarGrid.appendChild(cell);
+        }
+    }
+
+    document.getElementById('prev-month').addEventListener('click', () => {
+        currentMonth.setMonth(currentMonth.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
+        renderCalendar();
+    });
+
+    function renderDeadlines() {
+        deadlineList.innerHTML = '';
+        if (deadlines.length === 0) {
+            deadlineList.innerHTML = '<p class="text-slate-500 col-span-full text-center py-8">Belum ada deadline. Mulai dengan menambahkan tugas!</p>';
+            return;
+        }
+
+        const sortedDeadlines = deadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        sortedDeadlines.forEach((task, index) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const deadlineDate = new Date(task.date);
+            const diffTime = deadlineDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            let badgeClass = 'text-emerald-600 bg-emerald-100';
+            let priorityColor = 'bg-slate-100';
+            if (task.priority === 'high') priorityColor = 'bg-red-100 text-red-700';
+            else if (task.priority === 'medium') priorityColor = 'bg-amber-100 text-amber-700';
+            
+            if (diffDays <= 7) badgeClass = 'text-amber-600 bg-amber-100';
+            if (diffDays <= 3) badgeClass = 'text-red-600 bg-red-100';
+            if (diffDays <= 0) badgeClass = 'text-slate-600 bg-slate-100';
+
+            const countdownText = diffDays > 0 ? `H-${diffDays}` : (diffDays === 0 ? 'Hari Ini!' : 'Terlewat');
+
+            const card = `
+                <div class="card-glass rounded-xl p-5 hover:shadow-lg transition-all">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h5 class="font-semibold text-slate-800">${task.name}</h5>
+                            <p class="text-sm text-slate-600">${task.subject}</p>
+                        </div>
+                        <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="deleteDeadline(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2 mt-3">
+                        <span class="deadline-badge ${badgeClass}">${countdownText}</span>
+                        <span class="text-xs font-medium px-2 py-1 rounded-full ${priorityColor}">
+                            ${task.priority === 'high' ? 'Prioritas Tinggi' : task.priority === 'medium' ? 'Prioritas Sedang' : 'Prioritas Rendah'}
+                        </span>
+                    </div>
+                </div>
+            `;
+            deadlineList.innerHTML += card;
+        });
+    }
+
+    deadlineForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newTask = {
+            name: document.getElementById('task-name').value,
+            subject: document.getElementById('task-subject').value,
+            date: document.getElementById('task-date').value,
+            priority: document.getElementById('task-priority').value || 'medium',
+        };
+        deadlines.push(newTask);
+        localStorage.setItem('deadlines', JSON.stringify(deadlines));
+        renderDeadlines();
+        renderCalendar();
+        updateDashboard();
+        closeAllModals();
+        deadlineForm.reset();
+    });
+
+    window.deleteDeadline = (index) => {
+        deadlines.splice(index, 1);
+        localStorage.setItem('deadlines', JSON.stringify(deadlines));
+        renderDeadlines();
+        renderCalendar();
+        updateDashboard();
+    }
+
+    // ===== FocusU Logic - PERBAIKAN =====
+    const timeDisplay = document.getElementById('focusu-time');
+    const statusDisplay = document.getElementById('focusu-status');
+    const timerDisplay = document.getElementById('focusu-timer-display');
+    const startBtn = document.getElementById('focusu-start-btn');
+    const pauseBtn = document.getElementById('focusu-pause-btn');
+    const resetBtn = document.getElementById('focusu-reset-btn');
+    const sessionsDisplay = document.getElementById('focusu-sessions');
+    const focusDurationInput = document.getElementById('focus-duration');
+    const breakDurationInput = document.getElementById('break-duration');
+    const soundInput = document.getElementById('focusu-sound');
+    const audioElem = document.getElementById('focusu-audio');
+    const progressCircle = document.getElementById('focusu-progress-circle');
+
+    let soundSrc = '';
+    let timerInterval = null;
+    let totalSeconds = 0;
+    let secondsLeft = 0;
+    let isRunning = false;
+    let isBreak = false;
+    let FOCUS_TIME = 25 * 60;
+    let BREAK_TIME = 5 * 60;
+
+    soundInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            audioElem.src = url;
+            soundSrc = url;
+        }
+    });
+
+    // Timer customization functions
+    window.decreaseFocusDuration = () => {
+        const current = parseInt(focusDurationInput.value) || 25;
+        if (current > 1) focusDurationInput.value = current - 1;
+    }
+
+    window.increaseFocusDuration = () => {
+        const current = parseInt(focusDurationInput.value) || 25;
+        if (current < 120) focusDurationInput.value = current + 1;
+    }
+
+    window.decreaseBreakDuration = () => {
+        const current = parseInt(breakDurationInput.value) || 5;
+        if (current > 1) breakDurationInput.value = current - 1;
+    }
+
+    window.increaseBreakDuration = () => {
+        const current = parseInt(breakDurationInput.value) || 5;
+        if (current < 60) breakDurationInput.value = current + 1;
+    }
+
+    window.applyTimerSettings = () => {
+        const focusMinutes = parseInt(focusDurationInput.value) || 25;
+        const breakMinutes = parseInt(breakDurationInput.value) || 5;
+        
+        FOCUS_TIME = focusMinutes * 60;
+        BREAK_TIME = breakMinutes * 60;
+        
+        localStorage.setItem('timerSettings', JSON.stringify({ focus: focusMinutes, break: breakMinutes }));
+        resetTimer(true);
+        
+        // Visual feedback
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersimpan!';
+        btn.classList.add('bg-emerald-500');
+        btn.classList.remove('from-sky-500', 'to-blue-600');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-emerald-500');
+            btn.classList.add('from-sky-500', 'to-blue-600');
+        }, 2000);
+    }
+
+    const CIRCLE_LENGTH = 722; // stroke-dasharray value
+
+    function updateProgress() {
+        if (totalSeconds === 0) return;
+        const percent = (totalSeconds - secondsLeft) / totalSeconds;
+        const offset = CIRCLE_LENGTH * (1 - percent);
+        progressCircle.setAttribute('stroke-dashoffset', offset);
+    }
+
+    function updateDisplay() {
+        const minutes = Math.floor(secondsLeft / 60);
+        const seconds = secondsLeft % 60;
+        timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        updateProgress();
+    }
+
+    function playSound() {
+        if (soundSrc) {
+            audioElem.currentTime = 0;
+            audioElem.play().catch(err => console.log('Audio play failed:', err));
+        }
+    }
+
+    function vibrate() {
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200, 100, 200]);
+        }
+    }
+
+    function startTimer() {
+        if (isRunning) return;
+        isRunning = true;
+        startBtn.disabled = true;
+        
+        timerInterval = setInterval(() => {
+            secondsLeft--;
+            updateDisplay();
+            
+            if (secondsLeft <= 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                startBtn.disabled = false;
+                
+                // Timer selesai
+                playSound();
+                vibrate();
+                
+                if (!isBreak) {
+                    focusSessions++;
+                    localStorage.setItem('focusSessions', JSON.stringify(focusSessions));
+                    updateSessionsDisplay();
+                }
+                
+                isBreak = !isBreak;
+                resetTimer(false);
+                alert(isBreak ? "Waktunya istirahat! 🎉" : "Waktunya fokus! 💪");
+            }
+        }, 1000);
+    }
+    
+    function pauseTimer() { 
+        clearInterval(timerInterval); 
+        isRunning = false;
+        startBtn.disabled = false;
+    }
+
+    function resetTimer(manualReset = true) {
+        pauseTimer();
+        if (manualReset) isBreak = false;
+        
+        totalSeconds = isBreak ? BREAK_TIME : FOCUS_TIME;
+        secondsLeft = totalSeconds;
+        
+        statusDisplay.textContent = isBreak ? 'Break Time' : 'Focus Time';
+        timerDisplay.classList.remove('focus-mode-gradient', 'break-mode-gradient');
+        
+        if (isBreak) {
+            timerDisplay.classList.add('break-mode-gradient');
+        } else {
+            timerDisplay.classList.add('focus-mode-gradient');
+        }
+        
+        updateDisplay();
+    }
+
+    function updateSessionsDisplay() {
+        const sessionsCount = focusSessions || 0;
+        sessionsDisplay.innerHTML = `<i class="fas fa-fire text-red-500 mr-2"></i>Sesi Hari Ini: <span class="font-bold text-2xl text-emerald-600">${sessionsCount}</span>`;
+    }
+
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', () => resetTimer(true));
+
+    // Load timer settings from localStorage
+    const savedSettings = JSON.parse(localStorage.getItem('timerSettings'));
+    if (savedSettings) {
+        focusDurationInput.value = savedSettings.focus;
+        breakDurationInput.value = savedSettings.break;
+        FOCUS_TIME = savedSettings.focus * 60;
+        BREAK_TIME = savedSettings.break * 60;
+    }
+
+    // ===== CareerPath Quiz Logic =====
+    const quizContainer = document.getElementById('quiz-container');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const quizResult = document.getElementById('quiz-result');
+    let interestChart = null;
+    const quizData = [
+        { question: "Saat waktu luang, saya lebih suka...", options: {"Membaca buku atau coding": "Teknik", "Melukis atau bermain musik": "Seni", "Berolahraga atau kegiatan outdoor": "Kesehatan", "Diskusi atau berorganisasi": "Sosial"} },
+        { question: "Mata pelajaran favorit saya adalah...", options: {"Matematika/Fisika": "Teknik", "Bahasa/Sejarah": "Sosial", "Biologi/Kimia": "Kesehatan", "Seni Budaya": "Seni"} },
+        { question: "Saya paling bersemangat saat...", options: {"Menyelesaikan masalah logika rumit": "Teknik", "Mengekspresikan diri kreatif": "Seni", "Membantu orang lain": "Kesehatan", "Memimpin sebuah tim": "Sosial"} },
+        { question: "Lingkungan kerja ideal saya adalah...", options: {"Laboratorium atau komputer": "Teknik", "Studio atau panggung": "Seni", "Rumah sakit atau lapangan": "Kesehatan", "Kantor atau bertemu banyak orang": "Sosial"} },
+        { question: "Jika menemukan masalah, saya...", options: {"Menganalisis data untuk solusi": "Teknik", "Mencari solusi out-of-the-box": "Seni", "Memikirkan dampak pada orang": "Kesehatan", "Mengajak diskusi": "Sosial"} },
+        { question: "Saya lebih tertarik pada...", options: {"Cara kerja mesin/algoritma": "Teknik", "Keindahan visual/estetika": "Seni", "Kesehatan tubuh/mental": "Kesehatan", "Struktur masyarakat": "Sosial"} },
+        { question: "Dalam proyek kelompok, peran saya...", options: {"Problem-solver teknis": "Teknik", "Pemberi ide kreatif": "Seni", "Memastikan tim baik-baik": "Kesehatan", "Koordinator/presenter": "Sosial"} },
+        { question: "Saya mengagumi tokoh seperti...", options: {"Elon Musk atau Bill Gates": "Teknik", "Leonardo da Vinci": "Seni", "Florence Nightingale": "Kesehatan", "Nelson Mandela": "Sosial"} },
+        { question: "Pekerjaan menarik adalah...", options: {"Software Engineer": "Teknik", "Desainer Grafis": "Seni", "Dokter atau Terapis": "Kesehatan", "Manajer atau Pengacara": "Sosial"} },
+        { question: "Kepuasan terbesar saya dari...", options: {"Hasil bekerja sempurna": "Teknik", "Hasil indah menginspirasi": "Seni", "Bermanfaat untuk orang": "Kesehatan", "Diakui dan berdampak luas": "Sosial"} },
+    ];
+    let currentQuestionIndex = 0;
+    let scores = { "Teknik": 0, "Seni": 0, "Kesehatan": 0, "Sosial": 0 };
+
+    startQuizBtn.addEventListener('click', () => {
+        currentQuestionIndex = 0;
+        scores = { "Teknik": 0, "Seni": 0, "Kesehatan": 0, "Sosial": 0 };
+        quizResult.classList.add('hidden');
+        quizContainer.classList.remove('hidden');
+        renderQuestion();
+    });
+
+    function renderQuestion() {
+        if (currentQuestionIndex >= quizData.length) {
+            showResults();
+            return;
+        }
+        const q = quizData[currentQuestionIndex];
+        let optionsHTML = '';
+        for (const [option, category] of Object.entries(q.options)) {
+            optionsHTML += `<div class="w-full p-2"><div class="border-2 border-slate-200 rounded-lg p-4 text-center cursor-pointer hover:border-sky-500 hover:bg-sky-50 transition-colors quiz-option" data-category="${category}">${option}</div></div>`;
+        }
+        quizContainer.innerHTML = `<div class="card-glass rounded-xl shadow-lg p-8"><p class="text-slate-500 text-sm">Pertanyaan ${currentQuestionIndex + 1} dari ${quizData.length}</p><div class="w-full bg-slate-200 rounded-full h-2 my-4"><div class="bg-sky-500 h-2 rounded-full transition-all" style="width: ${((currentQuestionIndex + 1) / quizData.length) * 100}%"></div></div><h4 class="text-lg font-semibold my-6 text-slate-800">${q.question}</h4><div class="flex flex-wrap -m-2">${optionsHTML}</div></div>`;
+        
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                const category = e.target.dataset.category;
+                scores[category]++;
+                currentQuestionIndex++;
+                renderQuestion();
+            });
+        });
+    }
+
+    function showResults() {
+        quizContainer.classList.add('hidden');
+        quizResult.classList.remove('hidden');
+        const resultCategory = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        const recommendations = {
+            "Teknik": { major: "Teknik Informatika / Sains Data", reason: "Kamu memiliki pemikiran logis, analitis, dan suka memecahkan masalah kompleks. Cocok untuk bidang yang membutuhkan ketelitian dan inovasi teknologi." },
+            "Seni": { major: "Desain Komunikasi Visual / Seni Rupa", reason: "Kamu punya jiwa kreatif tinggi, menyukai keindahan, dan senang mengekspresikan diri. Bidang estetika dan imajinasi adalah duniamu." },
+            "Kesehatan": { major: "Kedokteran / Psikologi", reason: "Kamu memiliki empati besar dan dorongan untuk membantu orang. Karir kesehatan yang fokus pada kesejahteraan manusia sangat sesuai." },
+            "Sosial": { major: "Ilmu Komunikasi / Hubungan Internasional", reason: "Kamu pandai berinteraksi, senang diskusi, dan minat pada isu kemasyarakatan. Cocok untuk bidang yang butuh komunikasi dan leadership." },
+        };
+        document.getElementById('quiz-recommendation').textContent = recommendations[resultCategory].major;
+        document.getElementById('quiz-reason').textContent = recommendations[resultCategory].reason;
+        
+        const chartCtx = document.getElementById('interestChart').getContext('2d');
+        if (interestChart) interestChart.destroy();
+        
+        interestChart = new Chart(chartCtx, { 
+            type: 'radar', 
+            data: { 
+                labels: Object.keys(scores), 
+                datasets: [{ 
+                    label: 'Skor Minat', 
+                    data: Object.values(scores), 
+                    backgroundColor: 'rgba(56, 189, 248, 0.3)', 
+                    borderColor: 'rgba(14, 165, 233, 1)', 
+                    borderWidth: 3,
+                    pointRadius: 6,
+                    pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    fill: true
+                }] 
+            }, 
+            options: { 
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { 
+                    r: { 
+                        beginAtZero: true, 
+                        max: 10,
+                        ticks: { 
+                            stepSize: 2,
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    } 
+                },
+                plugins: {
+                    legend: { 
+                        display: true,
+                        labels: {
+                            font: { size: 13 },
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.r + ' poin';
+                            }
+                        }
+                    }
+                }
+            } 
+        });
+    }
+
+    document.getElementById('quiz-result').addEventListener('click', (e) => {
+        if (e.target.id === 'restart-quiz-btn') {
+            startQuizBtn.click();
+        }
+    });
+
+    // ===== SmartNotes Logic =====
+    const noteForm = document.getElementById('note-form');
+    const notesContainer = document.getElementById('notes-container');
+    let notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const noteFilterTag = document.getElementById('note-filter-tag');
+    const noteSearch = document.getElementById('note-search');
+    const notePinBtn = document.getElementById('note-pin-btn');
+    const notePinIcon = document.getElementById('note-pin-icon');
+    let pinNoteId = null;
+
+    notePinBtn.addEventListener('click', () => {
+        pinNoteId = document.getElementById('note-id').value || 'note_' + new Date().getTime();
+        notePinIcon.textContent = '📌';
+    });
+
+    function getNoteFormTags() {
+        return Array.from(document.querySelectorAll('.note-tag:checked')).map(e => e.value);
+    }
+    function setNoteFormTags(tags) {
+        document.querySelectorAll('.note-tag').forEach(e => e.checked = tags && tags.includes(e.value));
+    }
+    function getNoteFormColor() {
+        return document.querySelector('input[name="note-color"]:checked').value;
+    }
+    function setNoteFormColor(color) {
+        document.querySelectorAll('input[name="note-color"]').forEach(e => e.checked = (e.value === color));
+    }
+
+    noteForm.addEventListener('submit', (e) => { 
+        e.preventDefault(); 
+        const id = document.getElementById('note-id').value; 
+        const newNote = { 
+            id: id || 'note_' + new Date().getTime(), 
+            title: document.getElementById('note-title').value, 
+            content: document.getElementById('note-content').value, 
+            tags: getNoteFormTags(),
+            color: getNoteFormColor(),
+            pin: pinNoteId === (id || 'note_' + new Date().getTime())
+        }; 
+        if (id) { 
+            const noteIndex = notes.findIndex(n => n.id === id); 
+            notes[noteIndex] = newNote; 
+        } else { 
+            notes.push(newNote); 
+        } 
+        pinNoteId = null;
+        localStorage.setItem('notes', JSON.stringify(notes)); 
+        renderNotes(); 
+        updateDashboard(); 
+        closeAllModals(); 
+        noteForm.reset();
+        setNoteFormTags([]);
+        setNoteFormColor('yellow');
+        notePinIcon.textContent = '📌';
+    });
+
+    window.editNote = (id) => { 
+        const note = notes.find(n => n.id === id); 
+        document.getElementById('note-modal-title').textContent = 'Edit Catatan'; 
+        document.getElementById('note-id').value = note.id; 
+        document.getElementById('note-title').value = note.title; 
+        document.getElementById('note-content').value = note.content; 
+        setNoteFormTags(note.tags || []);
+        setNoteFormColor(note.color || 'yellow');
+        pinNoteId = note.pin ? note.id : null;
+        notePinIcon.textContent = note.pin ? '📌' : '📌';
+        showModal('noteModal'); 
+    };
+
+    window.deleteNote = (id) => { 
+        if (confirm('Yakin ingin menghapus catatan ini?')) { 
+            notes = notes.filter(n => n.id !== id); 
+            localStorage.setItem('notes', JSON.stringify(notes)); 
+            renderNotes(); 
+            updateDashboard(); 
+        } 
+    };
+
+    function renderNotes() {
+        notesContainer.innerHTML = '';
+        let filtered = notes.slice();
+
+        // Filter by tag
+        const tag = noteFilterTag.value;
+        if (tag) filtered = filtered.filter(n => n.tags && n.tags.includes(tag));
+
+        // Search by keyword
+        const keyword = noteSearch.value.trim().toLowerCase();
+        if (keyword) {
+            filtered = filtered.filter(n =>
+                n.title.toLowerCase().includes(keyword) ||
+                n.content.toLowerCase().includes(keyword) ||
+                (n.tags && n.tags.some(t => t.toLowerCase().includes(keyword)))
+            );
+        }
+
+        // Pin notes on top
+        filtered = filtered.sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0));
+
+        if (filtered.length === 0) { 
+            notesContainer.innerHTML = '<p class="text-slate-500 col-span-full text-center py-8">Klik "Tambah Catatan" untuk memulai mencatat.</p>'; 
+            return; 
+        }
+        filtered.forEach(note => {
+            let colorClass = 'from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-900';
+            if (note.color === 'blue') colorClass = 'from-blue-50 to-blue-100 border-blue-200 text-blue-900';
+            if (note.color === 'green') colorClass = 'from-emerald-50 to-emerald-100 border-emerald-200 text-emerald-900';
+            if (note.color === 'red') colorClass = 'from-red-50 to-red-100 border-red-200 text-red-900';
+            const tagsHtml = (note.tags || []).map(t => {
+                if (t === 'Penting') return '<span class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs mr-1">Penting</span>';
+                if (t === 'Sekolah') return '<span class="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs mr-1">Sekolah</span>';
+                if (t === 'Ide Kerja') return '<span class="px-2 py-1 rounded bg-emerald-100 text-emerald-700 text-xs mr-1">Ide Kerja</span>';
+                return `<span class="px-2 py-1 rounded bg-slate-100 text-slate-700 text-xs mr-1">${t}</span>`;
+            }).join('');
+            const pinHtml = note.pin ? '<span class="text-xl mr-1">📌</span>' : '';
+            notesContainer.innerHTML += `
+                <div class="bg-gradient-to-br ${colorClass} border rounded-xl shadow-sm p-5 flex flex-col hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-2">${pinHtml}<h5 class="font-semibold">${note.title}</h5></div>
+                    <p class="mt-2 flex-grow line-clamp-3">${note.content}</p>
+                    <div class="mt-2">${tagsHtml}</div>
+                    <div class="mt-4 pt-4 border-t border-opacity-30 flex gap-2">
+                        <button class="text-xs font-semibold text-slate-600 hover:text-sky-600 transition-colors" onclick="editNote('${note.id}')"><i class="fas fa-edit mr-1"></i>Edit</button>
+                        <span class="text-slate-300">|</span>
+                        <button class="text-xs font-semibold text-slate-600 hover:text-red-600 transition-colors" onclick="deleteNote('${note.id}')"><i class="fas fa-trash mr-1"></i>Hapus</button>
+                        <span class="text-slate-300">|</span>
+                        <button class="text-xs font-semibold text-yellow-600 hover:text-yellow-800 transition-colors" onclick="pinNote('${note.id}')"><span>📌</span>Pin</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    window.pinNote = (id) => {
+        notes = notes.map(n => n.id === id ? {...n, pin: !n.pin} : n);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        renderNotes();
+        updateDashboard();
+    };
+
+    noteFilterTag.addEventListener('change', renderNotes);
+    noteSearch.addEventListener('input', renderNotes);
+
+    // ===== Dashboard & Analytics Update =====
+    function updateDashboard() {
+        const dashboardDeadlines = document.getElementById('dashboard-deadlines');
+        dashboardDeadlines.innerHTML = '';
+        const upcoming = deadlines.filter(d => new Date(d.date) >= new Date().setHours(0,0,0,0)).sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 3);
+        if (upcoming.length > 0) { 
+            upcoming.forEach(task => { 
+                const diffTime = new Date(task.date) - new Date().setHours(0,0,0,0); 
+                const diffDays = Math.ceil(diffTime / 86400000) + 1; 
+                dashboardDeadlines.innerHTML += `<div class="p-3 bg-gradient-to-r from-sky-50 to-blue-50 rounded-lg border border-sky-100"><p class="font-medium text-slate-700">${task.name}</p><p class="text-sm text-red-500 font-semibold"><i class="fas fa-clock mr-1"></i>Sisa waktu: ${diffDays} hari</p></div>`; 
+            }); 
+        } else { 
+            dashboardDeadlines.innerHTML = '<p class="text-slate-500">Tidak ada deadline dalam waktu dekat.</p>'; 
+        }
+        
+        const dashboardNotes = document.getElementById('dashboard-notes');
+        dashboardNotes.innerHTML = '';
+        const recent = notes.slice(-2).reverse();
+        if (recent.length > 0) { 
+            recent.forEach(note => { 
+                dashboardNotes.innerHTML += `<div class="p-3 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border border-yellow-100"><h6 class="font-medium text-slate-700">${note.title}</h6><p class="text-sm text-slate-600 truncate">${note.content}</p></div>`; 
+            }); 
+        } else { 
+            dashboardNotes.innerHTML = '<p class="text-slate-500">Kamu belum punya catatan.</p>'; 
+        }
+
+        // Update dashboard stats
+        document.getElementById('stat-total-deadline').textContent = deadlines.length;
+        document.getElementById('stat-upcoming').textContent = deadlines.filter(d => {
+            const days = Math.ceil((new Date(d.date) - new Date().setHours(0,0,0,0)) / 86400000) + 1;
+            return days >= 1 && days <= 7;
+        }).length;
+        document.getElementById('stat-notes').textContent = notes.length;
+        document.getElementById('stat-streak').textContent = '7 hari';
+    }
+
+    function updateAnalytics(timeRange = 'month') {
+        let labels = [];
+        let productivityData = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (timeRange === 'day') {
+            // Per Jam dalam 24 jam
+            for (let i = 0; i < 24; i++) {
+                labels.push(`${String(i).padStart(2, '0')}:00`);
+                let count = 0;
+                deadlines.forEach(d => {
+                    count += Math.random() > 0.7 ? 1 : 0;
+                });
+                productivityData.push(count);
+            }
+        } else if (timeRange === 'week') {
+            // Per Hari dalam 7 hari
+            const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            for (let i = 0; i < 7; i++) {
+                labels.push(days[i]);
+                let count = 0;
+                const checkDate = new Date(today);
+                checkDate.setDate(today.getDate() - (6 - i));
+                deadlines.forEach(d => {
+                    const dDate = new Date(d.date);
+                    if (dDate.toDateString() === checkDate.toDateString()) {
+                        count++;
+                    }
+                });
+                productivityData.push(count);
+            }
+        } else if (timeRange === 'month') {
+            // Per Minggu dalam 4 minggu
+            const weeks = [{start: 0, end: 7, count: 0}, {start: 7, end: 14, count: 0}, {start: 14, end: 21, count: 0}, {start: 21, end: 28, count: 0}];
+            
+            deadlines.forEach(d => {
+                const deadlineDate = new Date(d.date);
+                const diffDays = Math.floor((deadlineDate - today) / (1000 * 60 * 60 * 24));
+                
+                weeks.forEach(week => {
+                    if (diffDays >= week.start && diffDays < week.end) {
+                        week.count++;
+                    }
+                });
+            });
+
+            labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
+            productivityData = weeks.map(w => w.count);
+        } else if (timeRange === 'hour') {
+            // Per 30 menit dalam 24 jam
+            for (let i = 0; i < 48; i++) {
+                const hour = Math.floor(i / 2);
+                const minute = (i % 2) * 30;
+                labels.push(`${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`);
+                let count = 0;
+                deadlines.forEach(d => {
+                    count += Math.random() > 0.85 ? 1 : 0;
+                });
+                productivityData.push(count);
+            }
+        }
+
+        // Productivity Chart
+        const productivityCtx = document.getElementById('productivityChart').getContext('2d');
+        
+        if (window.productivityChart) window.productivityChart.destroy();
+        window.productivityChart = new Chart(productivityCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Deadline Mendatang',
+                    data: productivityData,
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderColor: 'rgba(56, 189, 248, 1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 6,
+                    pointBackgroundColor: 'rgba(56, 189, 248, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: true },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    } 
+                }
+            }
+        });
+
+        // Deadline Distribution Chart
+        const deadlineCtx = document.getElementById('deadlineChart').getContext('2d');
+        const priorityCounts = { high: 0, medium:  0, low: 0 };
+        deadlines.forEach(d => priorityCounts[d.priority || 'medium']++);
+        
+        if (window.deadlineChart) window.deadlineChart.destroy();
+        window.deadlineChart = new Chart(deadlineCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tinggi', 'Sedang', 'Rendah'],
+                datasets: [{
+                    data: [priorityCounts.high, priorityCounts.medium, priorityCounts.low],
+                    backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(34, 197, 94, 0.8)'],
+                    borderColor: ['rgba(239, 68, 68, 1)', 'rgba(245, 158, 11, 1)', 'rgba(34, 197, 94, 1)'],
+                    borderWidth: 2
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Monitoring Results Chart
+        const monitoringCtx = document.getElementById('monitoringChart').getContext('2d');
+
+        if (window.monitoringChart) window.monitoringChart.destroy();
+        window.monitoringChart = new Chart(monitoringCtx, {
+            type: 'line',
+            data: {
+                labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                datasets: [
+                    {
+                        label: 'Fokus (%)',
+                        data: [65, 72, 78, 85],
+                        borderColor: 'rgba(56, 189, 248, 1)',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(56, 189, 248, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Produktivitas (%)',
+                        data: [60, 68, 75, 82],
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Konsistensi (%)',
+                        data: [70, 75, 80, 88],
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Penyelesaian (%)',
+                        data: [55, 65, 72, 80],
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'rgba(139, 92, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20,
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Update statistics
+        const totalDeadlines = deadlines.length;
+        const avgDeadlinePerPeriod = totalDeadlines > 0 ? (totalDeadlines / (timeRange === 'day' ? 24 : timeRange === 'week' ? 7 : timeRange === 'hour' ? 48 : 4)).toFixed(1) : 0;
+        const completedTasks = Math.floor(totalDeadlines * 0.75);
+        const completionRate = totalDeadlines > 0 ? Math.min(100, Math.floor((completedTasks / totalDeadlines) * 100)) : 0;
+        
+        document.getElementById('avg-deadline').textContent = avgDeadlinePerPeriod;
+        document.getElementById('total-focus-time').textContent = (focusSessions * 0.42).toFixed(1);
+        document.getElementById('completion-rate').textContent = completionRate + '%';
+    }
+
+    // ===== Time Range Filter Event Listeners =====
+    document.querySelectorAll('.time-range-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.time-range-btn').forEach(b => {
+                b.classList.remove('bg-sky-500', 'text-white', 'shadow-lg');
+                b.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+            });
+            e.target.classList.add('bg-sky-500', 'text-white', 'shadow-lg');
+            e.target.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+            updateAnalytics(e.target.dataset.range);
+        });
+    });
+
+    // Update analytics when navigating to analytics page
+    navLinks.forEach(link => {
+        if (link.dataset.page === 'analytics') {
+            link.addEventListener('click', () => {
+                setTimeout(() => updateAnalytics('month'), 100);
+            });
+        }
+        // Update dashboard saat navigasi ke dashboard
+        if (link.dataset.page === 'dashboard') {
+            link.addEventListener('click', () => {
+                updateDashboard();
+            });
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>
